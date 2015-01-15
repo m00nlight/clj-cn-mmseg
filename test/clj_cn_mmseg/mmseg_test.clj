@@ -63,7 +63,8 @@
         (is (= '(".")
                (candidate-prefix test-trie ".Say hello."))))))
   (deftest test-private-gen-candidates
-    (let [test-trie (t/build-trie {} '("hello" "hell" "cell" "hel" "ce" "llo"))]
+    (let [test-trie (t/build-trie
+                     {} '("hello" "hell" "cell" "hel" "ce" "llo"))]
       (testing "Testing normal case generate candidates."
         (is (= '(("b" "cell" "o")
                  ("b" "ce" "llo"))
