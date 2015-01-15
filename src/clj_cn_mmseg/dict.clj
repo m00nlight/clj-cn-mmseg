@@ -4,6 +4,7 @@
 
 (ns clj-cn-mmseg.dict
   (require [clojure.string :as s]
+           [clojure.tools.logging :as log]
            [clojure.set :as set]
            [clojure.java.io :as io]
            [clj-cn-mmseg.trie :as trie]))
@@ -82,6 +83,7 @@ personal name, 习大大 -> 习近平."
   "Help function for load dictionary file."
   [fname line-fn]
   (let [file (io/file (io/resource fname))]
+    (log/info "Loading " fname " dictionary")
     (map line-fn (s/split (slurp file) #"\r*\n"))))
 
 (defn concurrency->map
@@ -148,22 +150,35 @@ longest-suffix matching segment correspondingly. Default is in the prefix
 manner."
   ([] (load-dicts identity))
   ([f]
-     (let [loc (load-location-name-dict "sogou.loc")
+     (let [per (load-person-name-dict "wikipedia_zh_cn.per")
+           per-redirect (load-person-redirect "wikipedia_zh_cn.redirect.per")
+           company (load-type-dict "wikipedia_zh_cn.company" :company)
+           company-redirect (load-redirect "wikipedia_zh_cn.redirect.company"
+                                           :company)
+           loc (load-location-name-dict "sogou.loc")
            feature (load-feature-dict "xiandai_feature_lexicon.dict")
            idiom (concat (load-idiom-dict "sogou_idioms.dict")
-                         (load-idiom-dict "xiandai_idiom.dict")) 
-           seg-only (concat (load-splitonly-dict "xiandai_segment_only.dict")
-                            (load-splitonly-dict "words.dict"))
+                         (load-idiom-dict "xiandai_idiom.dict"))
+           netlang (load-netlang-dict "wikipedia_zh_cn.netlang")
+           seg-only (concat
+                     (load-splitonly-dict "sogou_segment_only.dict")
+                     (load-splitonly-dict "xiandai_segment_only.dict")
+                     (load-splitonly-dict "words.dict"))
            nums (load-type-dict "num.dict" :num)
            units (load-type-dict "all-unit.dict" :unit)
            other-name (load-type-dict "other_name.dict" :name)
            concurrency (load-concurrency-dict "concurrencies.dict")]
        (-> {}
            (trie/build-trie feature f)
+           (trie/build-trie per f)
+           (trie/build-trie per-redirect f)
+           (trie/build-trie company f)
+           (trie/build-trie company-redirect f)
            (trie/build-trie loc f)
            (trie/build-trie idiom f)
            (trie/build-trie nums f)
            (trie/build-trie units f)
+           (trie/build-trie netlang f)
            (trie/build-trie concurrency f)
            (trie/build-trie other-name f)
            (trie/build-trie seg-only f)))))
