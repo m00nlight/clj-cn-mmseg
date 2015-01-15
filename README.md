@@ -129,8 +129,7 @@ clj-cn-mmseg.core=> (mmseg "结果中了3.26亿美元…")
 
 
 ## TODO
-
-[] 实现词典中不存在的英文词的组合
++ [ ] 实现词典中不存在的英文词的组合
 
 ## Contribution
 
