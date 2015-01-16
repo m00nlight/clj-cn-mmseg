@@ -127,14 +127,43 @@ remain candidates for the result."
       (recur trie (drop (count (first candidate)) texts)
              (cons (first candidate) acc)))))
 
+(defn- combine-english
+  "Combine continusous English letters to form English words."
+  [words-with-natures]
+  (letfn [(all-letters? [s] (not (empty? (re-seq #"^[a-zA-Z]+$" s))))
+          (help [words stack acc]
+            (if (empty? words)
+              (reverse acc)
+              (let [[x & xs] words]
+                (cond
+                 ;; current node all english letters
+                 (all-letters? (:word x))
+                 (recur xs (cons (:word x) stack) acc)
+                 ;; current node is ".", the stack should not empty
+                 ;; and the previous should be capital letters.
+                 (and (= "." (:word x))
+                      (not (empty? stack))
+                      (not (empty? xs))
+                      (not (empty? (re-seq #"[A-Z]+" (first stack)))))
+                 (recur xs (cons (:word x) stack) acc)
+                 ;; all other case, cons stack result to acc and
+                 ;; current node to acc
+                 :else
+                 (if (empty? stack)
+                   (recur xs '() (cons x acc))
+                   (recur xs '()
+                          (cons x (cons {:word (apply str (reverse stack))
+                                         :nature {:english true}}
+                                        acc))))))))]
+    (help words-with-natures '() '())))
+
 (defn- combine-num-units-concurrency
   "Combine continuous number follow an unit to form a meaningful phrase."
   [word-with-natures]
   (letfn [(help [words stack acc]
             (if (empty? words)
               (reverse acc)
-              (let [x (first words)
-                    xs (rest words)]
+              (let [[x & xs] words]
                 (cond
                  ;; first words is an number or the type of 1,000 style of
                  ;; numbers.
@@ -175,8 +204,9 @@ remain candidates for the result."
 (defn mmseg
   "Main function for MMSeg algorithm."
   [trie texts]
-  (combine-num-units-concurrency
-   (mmseg-help trie (norm/fullwidth->halfwidth texts) '())))
+  (-> (mmseg-help trie (norm/fullwidth->halfwidth texts) '())
+      combine-num-units-concurrency
+      combine-english))
 
 
 (defn mmseg-seg-only

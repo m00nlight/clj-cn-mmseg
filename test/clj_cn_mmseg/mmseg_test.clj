@@ -125,3 +125,51 @@
                 {:word "3" :nature {:num true}}
                 {:word "2" :nature {:num true}}
                 {:word "%" :nature {:unit true}})))))))
+
+(tu/with-private-fns [clj-cn-mmseg.mmseg [combine-english]]
+  (deftest test-private-function-combine-english
+    (testing "Testing normal English words in sentence."
+      (is (= '({:word "Hello" :nature {:english true}}
+               {:word " " :nature {}}
+               {:word "World" :nature {:english true}}
+               {:word "程序" :nature {:split-only true}})
+             (combine-english
+              '({:word "H" :nature {}}
+                {:word "e" :nature {}}
+                {:word "l" :nature {}}
+                {:word "l" :nature {}}
+                {:word "o" :nature {}}
+                {:word " " :nature {}}
+                {:word "W" :nature {}}
+                {:word "o" :nature {}}
+                {:word "r" :nature {}}
+                {:word "l" :nature {}}
+                {:word "d" :nature {}}
+                {:word "程序" :nature {:split-only true}})))))
+    (testing "Testing words like U.S., which should not be split"
+      (is (= '({:word "U.S." :nature {:english true}}
+               {:word "是" :nature {:v true}}
+               {:word "美国" :nature {:loc true}})
+             (combine-english
+              '({:word "U" :nature {}}
+                {:word "." :nature {}}
+                {:word "S" :nature {}}
+                {:word "." :nature {}}
+                {:word "是" :nature {:v true}}
+                {:word "美国" :nature {:loc true}})))))
+    (testing "Tesing normal sentence punctuation"
+      (is (= '({:word "This" :nature {:english true}}
+               {:word " " :nature {}}
+               {:word "is" :nature {:english true}}
+               {:word " " :nature {}}
+               {:word "test" :nature {:english true}}
+               {:word "." :nature {}}
+               {:word "That" :nature {:english true}}
+               {:word " " :nature {}}
+               {:word "is" :nature {:english true}}
+               {:word " " :nature {}}
+               {:word "it" :nature {:english true}}
+               {:word "." :nature {}})
+             (combine-english
+              (map (fn [x] {:word (str x) :nature {}})
+                   (seq "This is test.That is it."))))))))

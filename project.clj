@@ -1,4 +1,4 @@
-(defproject clj-cn-mmseg "0.1.0"
+(defproject clj-cn-mmseg "0.1.2"
   :description "clj-cn-mmseg是一个用clojure实现的mmseg中文分词工具包。"
   :url "https://github.com/m00nlight/clj-cn-mmseg"
   :license {:name "Eclipse Public License"

@@ -104,7 +104,7 @@ clj-cn-mmseg.core=> (mmseg "卧槽~这SB的炒作也太低级了吧")
 {:split-only true}})
 ```
 
-再如上面这个例子，可以还原*SB*和*卧槽*之类的网络语言。
+再如上面这个例子，可以还原**SB**和**卧槽**之类的网络语言。
 
 
 对中文量词做了特殊处理，可以聚合数字加量词形式的词组，并且对常用货币单位也做了类似的，如下面
@@ -123,13 +123,23 @@ clj-cn-mmseg.core=> (mmseg "结果中了3.26亿美元…")
 {:word "…", :nature {}})
 ```
 
+```clojure
+clj-cn-mmseg.core=> (mmseg "U.S.News综合大学排名是全美最具权威影响力最大的排名。")
+({:word "U.S.News", :nature {:english true}} {:word "综合大学", :nature \
+{:split-only true}} {:word "排名", :nature {:split-only true, :v true}}\
+{:word "是", :nature {:adj true, :v true, :pron true}} {:word "全", :nature \
+{:adj true, :adv true}} {:word "美", :nature {:adj true, :n true}} \
+{:word "最", :nature {:adv true}} {:word "具", :nature {:unit true}} \
+{:word "权威", :nature {:split-only true, :n true}} {:word "影响力", :nature \
+{:split-only true}} {:word "最大", :nature {:split-only true}} {:word "的", \
+:nature {:split-only true}} {:word "排名", :nature {:split-only true, \
+:v true}} {:word "。", :nature {}})
+```
 
 上面所有的信息均来自维基百科生成的词典。在项目的`resources/`文件夹下。
 
-
-
 ## TODO
-+ [ ] 实现词典中不存在的英文词的组合
++ [X] 实现词典中不存在的英文词的组合
 
 ## Contribution
 
