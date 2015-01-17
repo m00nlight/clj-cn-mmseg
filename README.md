@@ -7,7 +7,7 @@ clj-cn-mmseg是一个用clojure实现的mmseg中文分词工具包。
 使用Leiningen，在`project.clj`文件中dependencies中加入如下依赖:
 
 ```clojure
-[clj-cn-mmseg "0.1.0"]
+[clj-cn-mmseg "0.1.2"]
 ```
 
 使用Maven，则在`pom.xml`文件中加入：
@@ -16,7 +16,7 @@ clj-cn-mmseg是一个用clojure实现的mmseg中文分词工具包。
 <dependency>
   <groupId>clj-cn-mmseg</groupId>
   <artifactId>clj-cn-mmseg</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.2</version>
 </dependency>
 ```
 
