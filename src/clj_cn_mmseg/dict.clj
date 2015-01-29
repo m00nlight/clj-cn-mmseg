@@ -84,9 +84,8 @@ personal name, 习大大 -> 习近平."
 (defn- load-dict-file
   "Help function for load dictionary file."
   [fname line-fn]
-  (let [file (io/file (io/resource fname))]
-    (log/info "Loading " fname " dictionary")
-    (map line-fn (s/split (slurp file) #"\r*\n"))))
+  (log/info "Loading " fname " dictionary")
+  (map line-fn (s/split (slurp (io/resource fname)) #"\r*\n")))
 
 (defn concurrency->map
   "Map between concurrency symbol and name. The form should be

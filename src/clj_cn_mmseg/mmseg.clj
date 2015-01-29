@@ -73,8 +73,7 @@ character in Chinese, we should use the segmentation of AA_D_EE."
                         (let [[word freq] (s/split x #"\s+")]
                           (assoc acc word (read-string freq))))
                       {}
-                      (s/split (slurp (io/file
-                                       (io/resource "CNCharacter.freq")))
+                      (s/split (slurp (io/resource "CNCharacter.freq"))
                                #"\r*\n")))
 
 (defn- eliminate-candidates
