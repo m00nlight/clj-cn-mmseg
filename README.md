@@ -140,6 +140,7 @@ clj-cn-mmseg.core=> (mmseg "U.S.News综合大学排名是全美最具权威影�
 
 ## TODO
 + [X] 实现词典中不存在的英文词的组合
++ [ ] 用户自定义辞典
 
 ## Contribution
 
