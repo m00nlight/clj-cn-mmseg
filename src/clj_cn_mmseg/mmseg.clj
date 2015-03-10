@@ -135,8 +135,8 @@ remain candidates for the result."
               (reverse acc)
               (let [[x & xs] words]
                 (cond
-                 ;; current node all english letters
-                 (all-letters? (:word x))
+                 ;; current node all english letters and with empty natures
+                 (and (all-letters? (:word x)) (empty? (:nature x)))
                  (recur xs (cons (:word x) stack) acc)
                  ;; current node is ".", the stack should not empty
                  ;; and the previous should be capital letters.
@@ -212,3 +212,4 @@ remain candidates for the result."
   [trie texts]
   (let [res (mmseg trie texts)]
     (s/join " " (map :word res) )))
+

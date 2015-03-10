@@ -52,7 +52,7 @@ split of foreign names into chunks etc."
   (let [names (s/split (s/trim name-str) #"·")]
     (if (= (count names) 1)
       (cons name-str '())
-      (cons name-str (filter #(>= (count %) 2) names)))))
+      (cons name-str (filter #(>= (count %) 3) names)))))
 
 (defn wikiname->namelist
   "Generate a name list from the name entity of wiki, since it may use mid dot
@@ -62,8 +62,8 @@ in English names when expressed in Chinese. For example, 理查·泰勒 will gen
   (let [names (s/split (s/trim name-str) #"·")]
     (if (= (count names) 1)
       names
-      (cons name-str (filter #(and (>= (count %) 2)
-                                    (empty? (re-seq #"^[a-z\.A-Z]+$" %)))
+      (cons name-str (filter #(and (>= (count %) 3)
+                                   (empty? (re-seq #"^[a-z\.A-Z]+$" %)))
                              names)))))
 
 
