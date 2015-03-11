@@ -49,7 +49,7 @@
     (is (= '("Angelababy")
            (wikiname->namelist "Angelababy"))))
   (testing "Testing for English name with mid dot in it."
-    (is (= '("理查·泰勒" "理查" "泰勒")
+    (is (= '("理查·泰勒")
            (wikiname->namelist "理查·泰勒")))))
 
 (deftest test-netlang->meaning
@@ -85,7 +85,6 @@
   (testing "Tesing English name with mid dot and one character in it."
     (is (= '({:word "卡尔·A·佩特里"
               :nature {:per true :redirect "卡尔·亚当·佩特里"}}
-             {:word "卡尔" :nature {:per true}}
              {:word "佩特里" :nature {:per true}})
            (wikiname->redirect "卡尔·A·佩特里<-->卡尔·亚当·佩特里")))))
 
@@ -96,7 +95,7 @@
     (is (= '("佐天仁皇后")
            (wikiper->per "佐天仁皇后"))))
   (testing "Testing for English names with no disambiguations."
-    (is (= '("西斯·格瑞辛格" "西斯" "格瑞辛格")
+    (is (= '("西斯·格瑞辛格" "格瑞辛格")
            (wikiper->per "西斯·格瑞辛格")))
     ;; should drop one characters in English name in result
     (is (= '("皮埃尔·德·顾拜旦" "皮埃尔" "顾拜旦")

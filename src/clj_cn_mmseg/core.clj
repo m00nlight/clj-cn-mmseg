@@ -9,31 +9,22 @@
 
 (defn mmseg-seg-only
   "Only return the segment result without additional information
-of the words."
+of the words. The result words is split by space.
+Type :: String -> String"
   [^String text]
   (m/mmseg-seg-only m/trie text))
 
 
-(defn entity
+(defn ner
+  "Name entity extraction from text. Return an String list, the
+name entity will be marked as XX/per, XX/loc or XX/org."
   [text]
   (map (fn [x]
-         (cond
-          (get-in x [:nature :company]) (str (:word x) "/org")
-          (get-in x [:nature :per]) (str (:word x) "/per")
-          (get-in x [:nature :loc]) (str (:word x) "/loc")
-          :else (str (:word x))))
+         (if (>= (count (:word x)) 2)
+           (cond
+            (get-in x [:nature :company]) (str (:word x) "/org")
+            (get-in x [:nature :loc]) (str (:word x) "/loc")
+            (get-in x [:nature :per]) (str (:word x) "/per")
+            :else (str (:word x)))
+           (:word x)))
        (-> text mmseg)))
-
-
-(defn entity-test
-  [^String input-file ^String output-file]
-  (with-open [rdr (io/reader input-file)]
-    (with-open [wrdr (io/writer output-file)]
-      (doseq [line (line-seq rdr)]
-        (let [tmp (entity line)
-              ents (filter #(or (.contains % "/per")
-                                (.contains % "/loc")
-                                (.contains % "/org"))
-                           tmp)]
-          (doseq [x ents]
-            (.write wrdr (str x "\n"))))))))

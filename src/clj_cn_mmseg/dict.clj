@@ -59,7 +59,7 @@ split of foreign names into chunks etc."
 in English names when expressed in Chinese. For example, 理查·泰勒 will generate
 '(\"理查·泰勒\", \"理查\", \"泰勒\")"
   [name-str]
-  (let [names (s/split (s/trim name-str) #"·")]
+  (let [names (map s/trim (s/split (s/trim name-str) #"·"))]
     (if (= (count names) 1)
       names
       (cons name-str (filter #(and (>= (count %) 3)
